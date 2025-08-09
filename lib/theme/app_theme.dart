@@ -29,25 +29,30 @@ ThemeData buildAppTheme() {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       ),
     ),
-    cardTheme: CardTheme(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    ),
+    // Minimal card styling (removed to avoid version mismatch errors)
     extensions: <ThemeExtension<dynamic>>[
-      const AppSemanticColors(success: success, warning: warning, error: error),
+      const AppSemanticColors(
+          primary: primary, success: success, warning: warning, error: error),
     ],
   );
 }
 
 class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
+  final Color primary;
   final Color success;
   final Color warning;
   final Color error;
-  const AppSemanticColors({required this.success, required this.warning, required this.error});
+  const AppSemanticColors(
+      {required this.primary,
+      required this.success,
+      required this.warning,
+      required this.error});
 
   @override
-  ThemeExtension<AppSemanticColors> copyWith({Color? success, Color? warning, Color? error}) {
+  ThemeExtension<AppSemanticColors> copyWith(
+      {Color? primary, Color? success, Color? warning, Color? error}) {
     return AppSemanticColors(
+      primary: primary ?? this.primary,
       success: success ?? this.success,
       warning: warning ?? this.warning,
       error: error ?? this.error,
@@ -55,9 +60,11 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
   }
 
   @override
-  ThemeExtension<AppSemanticColors> lerp(ThemeExtension<AppSemanticColors>? other, double t) {
+  ThemeExtension<AppSemanticColors> lerp(
+      ThemeExtension<AppSemanticColors>? other, double t) {
     if (other is! AppSemanticColors) return this;
     return AppSemanticColors(
+      primary: Color.lerp(primary, other.primary, t)!,
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       error: Color.lerp(error, other.error, t)!,

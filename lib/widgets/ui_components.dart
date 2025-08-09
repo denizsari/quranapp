@@ -3,8 +3,10 @@ import '../theme/app_theme.dart';
 import '../theme/typography.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton.primary(this.label, {super.key, this.onPressed}) : variant = _ButtonVariant.primary;
-  const AppButton.ghost(this.label, {super.key, this.onPressed}) : variant = _ButtonVariant.ghost;
+  const AppButton.primary(this.label, {super.key, this.onPressed})
+      : variant = _ButtonVariant.primary;
+  const AppButton.ghost(this.label, {super.key, this.onPressed})
+      : variant = _ButtonVariant.ghost;
 
   final String label;
   final VoidCallback? onPressed;
@@ -13,7 +15,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).extension<AppSemanticColors>()!;
-    final baseStyle = AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, color: Colors.white);
+    final baseStyle = AppTextStyles.body
+        .copyWith(fontWeight: FontWeight.w600, color: Colors.white);
     Color bg;
     Color border;
     Color fg;
@@ -60,7 +63,10 @@ class AppCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colors.primary.withOpacity(.1)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(.04), blurRadius: 8, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4)),
         ],
       ),
       padding: const EdgeInsets.all(16),
@@ -82,13 +88,17 @@ class AppProgressBar extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(children: [
-            Container(height: 10, width: double.infinity, color: Colors.black.withOpacity(.05)),
+            Container(
+                height: 10,
+                width: double.infinity,
+                color: Colors.black.withOpacity(.05)),
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               height: 10,
               width: constraints.maxWidth * value.clamp(0, 1),
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [colors.primary, colors.success]),
+                gradient:
+                    LinearGradient(colors: [colors.primary, colors.success]),
               ),
             )
           ]);
@@ -98,8 +108,8 @@ class AppProgressBar extends StatelessWidget {
   }
 }
 
-class Badge extends StatelessWidget {
-  const Badge({super.key, required this.label, this.color});
+class AppBadge extends StatelessWidget {
+  const AppBadge({super.key, required this.label, this.color});
   final String label;
   final Color? color;
   @override
@@ -111,7 +121,9 @@ class Badge extends StatelessWidget {
         color: (color ?? colors.primary).withOpacity(.1),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(label, style: AppTextStyles.caption.copyWith(color: color ?? colors.primary, fontWeight: FontWeight.w600)),
+      child: Text(label,
+          style: AppTextStyles.caption.copyWith(
+              color: color ?? colors.primary, fontWeight: FontWeight.w600)),
     );
   }
 }

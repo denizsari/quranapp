@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
-import '../lib/progression.dart';
-import 'dart:math' as math;
+import 'package:quran_learning_core/progression.dart';
 
 void main() {
   group('ProgressionService', () {
@@ -14,9 +13,11 @@ void main() {
     });
 
     test('earned xp rounding', () {
-      final m = LessonMetrics(correct: 9, total: 10, baseXp: 10); // 0.9 acc -> 1.0 mult
+      final m = LessonMetrics(
+          correct: 9, total: 10, baseXp: 10); // 0.9 acc -> 1.0 mult
       expect(svc.computeEarnedXp(m), 10);
-      final m2 = LessonMetrics(correct: 10, total: 10, baseXp: 10); // 1.0 acc -> 1.2 mult
+      final m2 = LessonMetrics(
+          correct: 10, total: 10, baseXp: 10); // 1.0 acc -> 1.2 mult
       expect(svc.computeEarnedXp(m2), 12);
     });
 

@@ -1,17 +1,31 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class UserLessonProgress {
+  final String id;
+  final String userId;
+  final String lessonId;
+  final double progress; // 0-1
+  final int lastUpdatedAt; // epoch ms
+  const UserLessonProgress({
+    required this.id,
+    required this.userId,
+    required this.lessonId,
+    required this.progress,
+    required this.lastUpdatedAt,
+  });
 
-part 'user_lesson_progress.freezed.dart';
-part 'user_lesson_progress.g.dart';
+  factory UserLessonProgress.fromJson(Map<String, dynamic> json) =>
+      UserLessonProgress(
+        id: json['id'] as String,
+        userId: json['userId'] as String,
+        lessonId: json['lessonId'] as String,
+        progress: (json['progress'] as num?)?.toDouble() ?? 0,
+        lastUpdatedAt: (json['lastUpdatedAt'] as num?)?.toInt() ?? 0,
+      );
 
-@freezed
-class UserLessonProgress with _$UserLessonProgress {
-  const factory UserLessonProgress({
-    required String id,
-    required String userId,
-    required String lessonId,
-    required double progress, // 0-1
-    required int lastUpdatedAt, // epoch ms
-  }) = _UserLessonProgress;
-
-  factory UserLessonProgress.fromJson(Map<String, dynamic> json) => _$UserLessonProgressFromJson(json);
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'userId': userId,
+        'lessonId': lessonId,
+        'progress': progress,
+        'lastUpdatedAt': lastUpdatedAt,
+      };
 }
