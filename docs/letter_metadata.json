@@ -1,0 +1,12 @@
+[
+  { "id": "alif", "display": "ا", "order": 1 },
+  { "id": "ba",   "display": "ب", "order": 2 },
+  { "id": "ta",   "display": "ت", "order": 3 },
+  { "id": "tha",  "display": "ث", "order": 4 },
+  { "id": "jim",  "display": "ج", "order": 5 },
+  { "id": "ha",   "display": "ح", "order": 6 },
+  { "id": "kha",  "display": "خ", "order": 7 },
+  { "id": "dal",  "display": "د", "order": 8 },
+  { "id": "dhal", "display": "ذ", "order": 9 },
+  { "id": "ra",   "display": "ر", "order": 10 }
+]
