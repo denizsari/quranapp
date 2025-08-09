@@ -328,8 +328,9 @@ class ProgressWriteController {
       const baseXp = 10;
       result.oldXp = profile.xp;
       result.accuracy = computeLessonAccuracy(lessonId);
-      if (result.accuracy == null || result.accuracy!.isNaN)
+      if (result.accuracy == null || result.accuracy!.isNaN) {
         result.accuracy = 0.0;
+      }
       result.multiplierUsed = _computeMultiplier(result.accuracy!);
       final earnedXp = (baseXp * result.multiplierUsed).round();
       result.newXp = result.oldXp! + earnedXp;

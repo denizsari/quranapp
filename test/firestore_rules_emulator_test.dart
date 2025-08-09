@@ -68,8 +68,14 @@ void main() {
       await _signIn(envB.$2); // second user for cross-user isolation tests
     });
 
+    bool enforce() =>
+        (Platform.environment['FIRESTORE_RULES_ENFORCE'] ?? '') == '1';
+
     test('user can create & read own profile; cannot read others', () async {
-      if (!available) return; // silent skip
+      if (!available) {
+        if (enforce()) fail('Emulator not available but enforcement enabled');
+        return; // silent skip
+      }
       final fsA = envA.$3;
       final fsB = envB.$3;
       // userA creates own profile
@@ -88,7 +94,10 @@ void main() {
     });
 
     test('userLessonProgress doc id must start with <uid>_ prefix', () async {
-      if (!available) return;
+      if (!available) {
+        if (enforce()) fail('Emulator not available but enforcement enabled');
+        return;
+      }
       final fsA = envA.$3;
       final goodId = '${userA.uid}_lesson1';
       await fsA
@@ -107,7 +116,10 @@ void main() {
     });
 
     test('attempt create allowed; attempt update denied (immutable)', () async {
-      if (!available) return;
+      if (!available) {
+        if (enforce()) fail('Emulator not available but enforcement enabled');
+        return;
+      }
       final fsA = envA.$3;
       final progressId = '${userA.uid}_lessonX';
       await fsA.collection('userLessonProgress').doc(progressId).set({'xp': 0});
@@ -128,7 +140,10 @@ void main() {
     });
 
     test('systemFlags readable without auth', () async {
-      if (!available) return;
+      if (!available) {
+        if (enforce()) fail('Emulator not available but enforcement enabled');
+        return;
+      }
       // Create a flag via userA (any authenticated context) then read from unauthenticated app.
       final fsA = envA.$3;
       await fsA

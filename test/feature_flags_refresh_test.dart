@@ -19,6 +19,7 @@ void main() {
     final override =
         FutureProvider<FeatureFlags>((ref) async => counter.make());
     container = ProviderContainer(overrides: [
+      // ignore: deprecated_member_use
       featureFlagsProvider.overrideWithProvider(override),
       crashlyticsLoggerProvider.overrideWithValue(_NoopCrash()),
     ]);
@@ -40,5 +41,5 @@ class _NoopCrash extends CrashlyticsLogger {
 
 class _DummyRef implements Ref {
   @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

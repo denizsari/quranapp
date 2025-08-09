@@ -8,8 +8,8 @@ void main() {
       String uid = 'abc';
       String good = 'abc_lesson1';
       String bad = 'zzz_lesson1';
-      expect(good.startsWith(uid + '_'), isTrue);
-      expect(bad.startsWith(uid + '_'), isFalse);
+      expect(good.startsWith('${uid}_'), isTrue);
+      expect(bad.startsWith('${uid}_'), isFalse);
     });
 
     test('attempt subcollection write immutability (conceptual)', () {
