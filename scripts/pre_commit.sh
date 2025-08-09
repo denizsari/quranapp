@@ -13,10 +13,8 @@ dart format --set-exit-if-changed ${CHANGED} || {
   dart format ${CHANGED};
 }
 
-echo "Running analyzer (non-blocking warnings)..."
-if ! dart analyze; then
-  echo "Analyzer reported issues; proceeding (temporary lenient mode)."
-fi
+echo "Running analyzer..."
+dart analyze || { echo "Analyzer failed"; exit 1; }
 
 echo "Running unit tests (fast subset)..."
 flutter test test/progression_test.dart test/spaced_repetition_test.dart

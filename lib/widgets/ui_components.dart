@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
         break;
       case _ButtonVariant.ghost:
         bg = Colors.transparent;
-        border = theme.primary.withOpacity(.4);
+        border = theme.primary.withValues(alpha: 0.4);
         fg = theme.primary;
         break;
     }
@@ -61,10 +61,10 @@ class AppCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.primary.withOpacity(.1)),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 4)),
         ],
@@ -91,7 +91,7 @@ class AppProgressBar extends StatelessWidget {
             Container(
                 height: 10,
                 width: double.infinity,
-                color: Colors.black.withOpacity(.05)),
+                color: Colors.black.withValues(alpha: 0.05)),
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               height: 10,
@@ -118,7 +118,7 @@ class AppBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: (color ?? colors.primary).withOpacity(.1),
+        color: (color ?? colors.primary).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(label,

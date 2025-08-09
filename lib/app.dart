@@ -11,8 +11,6 @@ import 'analytics/analytics.dart';
 import 'providers/user_progress_write_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'dart:typed_data';
-import 'providers/user_progress_write_provider.dart'
-    show recordingUploadServiceProvider;
 
 class QuranApp extends ConsumerWidget {
   const QuranApp({super.key});
