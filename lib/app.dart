@@ -11,6 +11,7 @@ import 'analytics/analytics.dart';
 import 'providers/user_progress_write_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'dart:typed_data';
+import 'feature_flags.dart';
 
 class QuranApp extends ConsumerWidget {
   const QuranApp({super.key});
@@ -38,6 +39,7 @@ class HomeScreen extends ConsumerWidget {
         progressView == null ? null : 'Seviye ${progressView.level}';
     final streakBadge =
         progressView == null ? null : 'Günlük Seri ${profile?.streak ?? 0}';
+    final flagsAsync = ref.watch(featureFlagsProvider);
     final lessonsAsync = ref.watch(lessonsStreamProvider);
     final analytics = const ConsoleAnalytics();
     final progressWriter = ref.watch(progressWriteControllerProvider);
@@ -65,6 +67,15 @@ class HomeScreen extends ConsumerWidget {
                 AppBadge(label: streakBadge, color: Colors.orange),
               ]
             ]),
+            const SizedBox(height: 8),
+            flagsAsync.when(
+              data: (f) => Row(children: [
+                if (f.aiPronunciationEnabled)
+                  const AppBadge(label: 'AI Pron.', color: Colors.purple),
+              ]),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
             const SizedBox(height: 16),
             lessonsAsync.when(
               data: (lessons) {

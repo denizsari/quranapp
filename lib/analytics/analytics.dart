@@ -1,4 +1,6 @@
 /// Simple analytics helper placeholder.
+library analytics;
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 abstract class Analytics {

@@ -1,3 +1,5 @@
+library progression;
+
 import 'dart:math' as dart_math;
 
 /// Core progression logic (pure Dart) - draft
