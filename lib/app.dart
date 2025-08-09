@@ -10,6 +10,9 @@ import 'providers/lessons_providers.dart';
 import 'analytics/analytics.dart';
 import 'providers/user_progress_write_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:typed_data';
+import 'providers/user_progress_write_provider.dart'
+    show recordingUploadServiceProvider;
 
 class QuranApp extends ConsumerWidget {
   const QuranApp({super.key});
@@ -35,6 +38,8 @@ class HomeScreen extends ConsumerWidget {
     final progressView = ref.watch(userProgressViewProvider);
     final levelBadge =
         progressView == null ? null : 'Seviye ${progressView.level}';
+    final streakBadge =
+        progressView == null ? null : 'Günlük Seri ${profile?.streak ?? 0}';
     final lessonsAsync = ref.watch(lessonsStreamProvider);
     final analytics = const ConsoleAnalytics();
     final progressWriter = ref.watch(progressWriteControllerProvider);
@@ -55,7 +60,13 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 8),
             const AppProgressBar(value: 0.42),
             const SizedBox(height: 24),
-            if (levelBadge != null) AppBadge(label: levelBadge),
+            Row(children: [
+              if (levelBadge != null) AppBadge(label: levelBadge),
+              if (streakBadge != null) ...[
+                const SizedBox(width: 8),
+                AppBadge(label: streakBadge, color: Colors.orange),
+              ]
+            ]),
             const SizedBox(height: 16),
             lessonsAsync.when(
               data: (lessons) {
@@ -92,6 +103,14 @@ class HomeScreen extends ConsumerWidget {
             AppButton.primary('Derse Başla',
                 onPressed: () =>
                     analytics.log('lesson_started', params: {'id': 'demo'})),
+            const SizedBox(height: 12),
+            AppButton.ghost('Kayıt Yükle (stub)', onPressed: () async {
+              final bytes =
+                  Uint8List.fromList(List<int>.generate(128, (i) => i % 256));
+              await ref
+                  .read(recordingUploadServiceProvider)
+                  .uploadLessonRecording(lessonId: 'demo', data: bytes);
+            }),
             const SizedBox(height: 12),
             AppButton.ghost('Crash Test',
                 onPressed: () => FirebaseCrashlytics.instance.crash()),

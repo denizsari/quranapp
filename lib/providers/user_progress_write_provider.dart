@@ -4,6 +4,32 @@ import '../auth.dart';
 import '../analytics/analytics.dart';
 import '../models/user_profile.dart';
 import '../progression.dart';
+import 'dart:typed_data';
+
+/// S1-6: simple audio recording upload stub (no real storage yet)
+final recordingUploadServiceProvider =
+    Provider<RecordingUploadService>((ref) => RecordingUploadService(ref));
+
+class RecordingUploadResult {
+  final String recordingId;
+  final int sizeBytes;
+  const RecordingUploadResult(this.recordingId, this.sizeBytes);
+}
+
+class RecordingUploadService {
+  RecordingUploadService(this._ref);
+  final Ref _ref;
+  Future<RecordingUploadResult> uploadLessonRecording(
+      {required String lessonId, required Uint8List data}) async {
+    // Placeholder: in future push to Firebase Storage and return path
+    final fakeId = 'rec_${DateTime.now().millisecondsSinceEpoch}';
+    await _ref.read(analyticsProvider).log('recording_uploaded', params: {
+      'lessonId': lessonId,
+      'bytes': data.length,
+    });
+    return RecordingUploadResult(fakeId, data.length);
+  }
+}
 
 final userLessonProgressCollectionProvider =
     Provider<CollectionReference<Map<String, dynamic>>>((ref) {
