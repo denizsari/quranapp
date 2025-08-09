@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../theme/typography.dart';
 
+// Public enum (was private) to avoid public API using private type lint.
+enum ButtonVariant { primary, ghost }
+
 class AppButton extends StatelessWidget {
   const AppButton.primary(this.label, {super.key, this.onPressed})
-      : variant = _ButtonVariant.primary;
+      : variant = ButtonVariant.primary;
   const AppButton.ghost(this.label, {super.key, this.onPressed})
-      : variant = _ButtonVariant.ghost;
+      : variant = ButtonVariant.ghost;
 
   final String label;
   final VoidCallback? onPressed;
-  final _ButtonVariant variant;
+  final ButtonVariant variant;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +24,12 @@ class AppButton extends StatelessWidget {
     Color border;
     Color fg;
     switch (variant) {
-      case _ButtonVariant.primary:
+      case ButtonVariant.primary:
         bg = theme.primary;
         border = theme.primary;
         fg = Colors.white;
         break;
-      case _ButtonVariant.ghost:
+      case ButtonVariant.ghost:
         bg = Colors.transparent;
         border = theme.primary.withValues(alpha: 0.4);
         fg = theme.primary;
@@ -47,8 +50,6 @@ class AppButton extends StatelessWidget {
     );
   }
 }
-
-enum _ButtonVariant { primary, ghost }
 
 class AppCard extends StatelessWidget {
   const AppCard({super.key, this.child, this.onTap});

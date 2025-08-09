@@ -48,4 +48,20 @@ class UserProfile {
         'streak': streak,
         'lastActiveAt': lastActiveAt,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserProfile &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          displayName == other.displayName &&
+          xp == other.xp &&
+          level == other.level &&
+          streak == other.streak &&
+          lastActiveAt == other.lastActiveAt;
+
+  @override
+  int get hashCode =>
+      Object.hash(id, displayName, xp, level, streak, lastActiveAt);
 }

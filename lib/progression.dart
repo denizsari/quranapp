@@ -68,7 +68,7 @@ class ProgressionService {
 
   void updateStreak(UserProgressState user, DateTime nowUtc) {
     final last = user.lastActiveUtc;
-    final threshold = Duration(hours: 30);
+    const threshold = Duration(hours: 30);
     if (last == null) {
       user.streakCurrent = 1;
     } else if (nowUtc.difference(last) > threshold) {
