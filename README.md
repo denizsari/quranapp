@@ -1,5 +1,7 @@
 # Kuran & Arapça Öğrenme Uygulaması (Doküman Dizini)
 
+![Coverage](https://img.shields.io/badge/coverage-placeholder-lightgrey)
+
 Bu repo şu an konsept / planlama ve çekirdek algoritma aşamasındadır. Aşağıda mevcut doküman ve prototip modül bağlantıları yer alır.
 
 ## 1. Dokümanlar
@@ -29,9 +31,8 @@ Kod klasörü: `lib/` (progression, spaced repetition + temel Flutter scaffold: 
 ## 3. Kurulum (Çekirdek + Flutter)
 ```
 dart pub get
-dart run build_runner build --delete-conflicting-outputs   # (freezed modelleri eklendiğinde)
-flutter test                                                # unit + widget test
-flutter test integration_test                               # basit smoke integration
+flutter test            # unit + widget testleri
+flutter test integration_test  # smoke integration
 ```
 
 ## 4. Yol Haritası (Kısa)
@@ -69,14 +70,7 @@ Commit formatı: `docs/commit_convention.md`
 ### Sprint 1 Plan (Özet)
 İlk 10 harf için dinamik liste, anonim kullanıcı ilerleme güncellemesi, kayıt yükleme taslağı ve temel analytics eventleri. Detay: `docs/sprint1_plan.md`.
 
-Modeller için (freezed/json):
-```
-dart run build_runner build --delete-conflicting-outputs
-```
-Watch modu:
-```
-dart run build_runner watch
-```
+> Not: Freezed/geçici codegen kaldırıldı; basit modeller elle yazıldı. Geri eklenirse build_runner komutları burada güncellenecek.
 
 1. Tasarım Sistemi Kuralları (renk, tipografi, komponent tokenları) – in progress (`theme/app_theme.dart`)
 2. Firestore Security Rules implementasyonu (rules dosyası + emulator test)
