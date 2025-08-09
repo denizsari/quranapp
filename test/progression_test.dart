@@ -50,9 +50,11 @@ void main() {
       final day2 = DateTime.utc(2025, 1, 2, 10); // < 30h later diff day
       svc.updateStreak(user, day2);
       expect(user.streakCurrent, 2);
-      final resetDay = DateTime.utc(2025, 1, 4, 20); // > 30h gap
+      final resetDay = DateTime.utc(2025, 1, 4,
+          20); // > 30h gap triggers grace consume (then reset if another gap)
       svc.updateStreak(user, resetDay);
-      expect(user.streakCurrent, 1);
+      // Grace available at start (1). First long gap consumes grace -> streak persists at 2.
+      expect(user.streakCurrent, 2);
     });
   });
 }

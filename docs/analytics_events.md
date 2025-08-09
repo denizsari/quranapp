@@ -14,11 +14,13 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 | activation_started | Kullanıcı ilk dersi açtığında | İlk ders girişi | Activation Rate |
 | lesson_started | Ders UI render sonrası | Her ders başlangıcı | Completion Funnel |
 | lesson_completed | Başarılı tamamlama | Ders bitişi | Completion Rate, XP |
+| level_up | Level artışı | XP artışı sonrası | Progression Pace |
 | exercise_attempt | Egzersiz cevap denemesi | Cevap submit | Doğruluk analizi |
 | exercise_feedback_shown | Geri bildirim UI gösterildi | Feedback anı | Latency ölçümü |
 | streak_increment | Streak artışı | Streak güncelleme | Retention Proxy |
 | xp_awarded | XP hesaplandı | Ders bitişi | Progression Pace |
-| recording_uploaded | Ses kayıt yükleme başarısı | Upload success | AI Hazırlık |
+  schema_version: 2,
+  timestamp: ISO8601
 | notification_sent | Push planlandı/gönderildi | FCM dispatch | Notification Etkinliği |
 | notification_opened | Push açıldı | Kullanıcı açma | CTR |
 | weak_item_scheduled | Spaced repetition item surfaced | Öğrenme ekranı | Personalization Etkinliği |
@@ -55,7 +57,19 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 }
 ```
 
-### 3.3 exercise_attempt
+### 3.3 level_up
+```
+{
+  event: 'level_up',
+  user_id: '<uid>',
+  from: 3,
+  to: 4,
+  xp: 520,
+  timestamp: ISO8601
+}
+```
+
+### 3.4 exercise_attempt
 ```
 {
   event: 'exercise_attempt',
@@ -70,34 +84,74 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 }
 ```
 
-### 3.4 xp_awarded
+### 3.5 xp_awarded
 ```
 {
   event: 'xp_awarded',
   user_id: '<uid>',
   lesson_id: 'm1_alif',
   base_xp: 10,
-  performance_multiplier: 1.2,
-  total_xp: 12,
+  accuracy: 0.92,
+  multiplier: 1.2,
+  earned_xp: 12,
+  xp_before: 110,
+  xp_after: 122,
   level_before: 3,
   level_after: 3,
+  attempt_count: 7,
+  lat_p50_ms: 480,
+  lat_p95_ms: 1400,
+  current_streak: 5,
+  lat_outlier_ratio: 0.15,
   timestamp: ISO8601
 }
 ```
 
-### 3.5 streak_increment
+### 3.6 streak_increment
 ```
 {
   event: 'streak_increment',
   user_id: '<uid>',
   streak_before: 4,
   streak_after: 5,
-  timestamp: ISO8601,
-  grace_used: false
+  grace_used: false,
+  timestamp: ISO8601
 }
 ```
 
-### 3.6 recording_uploaded
+### 3.6.1 attempt_batch_flush (İç Telemetry)
+```
+{
+  event: 'attempt_batch_flush',
+  count: 15,
+  batch_age_ms: 3200,
+  first_attempt_id: 'L1_1',
+  correct_count: 12,
+  accuracy: 0.8,
+  timestamp: ISO8601
+}
+```
+
+### 3.6.2 adjudicator_submit_ok / adjudicator_submit_fail
+```
+// success
+{
+  event: 'adjudicator_submit_ok',
+  lesson_id: 'm1_alif',
+  attempts: 1,
+  timestamp: ISO8601
+}
+// fail
+{
+  event: 'adjudicator_submit_fail',
+  lesson_id: 'm1_alif',
+  retry_count: 3,
+  last_status_code: 500,
+  timestamp: ISO8601
+}
+```
+
+### 3.7 recording_uploaded
 ```
 {
   event: 'recording_uploaded',
@@ -112,7 +166,7 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 }
 ```
 
-### 3.7 weak_item_scheduled
+### 3.8 weak_item_scheduled
 ```
 {
   event: 'weak_item_scheduled',
@@ -125,7 +179,7 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 }
 ```
 
-### 3.8 notification_sent / notification_opened
+### 3.9 notification_sent / notification_opened
 ```
 // notification_sent
 {
@@ -144,7 +198,7 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 }
 ```
 
-### 3.9 premium_trial_started / premium_trial_converted / premium_canceled
+### 3.10 premium_trial_started / premium_trial_converted / premium_canceled
 ```
 {
   event: 'premium_trial_started',
@@ -192,5 +246,17 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 - leaderboard_position_changed
 - achievement_unlocked
 
+## 8. Performans Telemetri Eventleri
+- perf_cold_start: { ms_since_process_start, ms_since_binding, firebase_init_ms }
+- perf_lesson_complete_ms: { lesson_id, duration_ms }
+
+## 9. Ek Telemetry (Sprint 4)
+- ai_scorer_slow: { lesson_id, exercise_id, latency_ms, slow_ms_cfg }
+- leaderboard_fetched: { count }
+- daily_goal_set: { goal_xp }
+- daily_goal_reached: { goal_xp, earned_xp }
+ - adjudicator_outbox_submit_error: { lesson_id }
+ - ai_scorer_error: { lesson_id, exercise_id, error }
+
 ---
-Revizyon: v1.0 (Sprint 0)
+Revizyon: v1.2 (Sprint 5 - adjudicator_outbox_submit_error & ai_scorer_error eklendi)
