@@ -2,30 +2,36 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../theme/typography.dart';
 
+// Public enum (was private) to avoid public API using private type lint.
+enum ButtonVariant { primary, ghost }
+
 class AppButton extends StatelessWidget {
-  const AppButton.primary(this.label, {super.key, this.onPressed}) : variant = _ButtonVariant.primary;
-  const AppButton.ghost(this.label, {super.key, this.onPressed}) : variant = _ButtonVariant.ghost;
+  const AppButton.primary(this.label, {super.key, this.onPressed})
+      : variant = ButtonVariant.primary;
+  const AppButton.ghost(this.label, {super.key, this.onPressed})
+      : variant = ButtonVariant.ghost;
 
   final String label;
   final VoidCallback? onPressed;
-  final _ButtonVariant variant;
+  final ButtonVariant variant;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).extension<AppSemanticColors>()!;
-    final baseStyle = AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, color: Colors.white);
+    final baseStyle = AppTextStyles.body
+        .copyWith(fontWeight: FontWeight.w600, color: Colors.white);
     Color bg;
     Color border;
     Color fg;
     switch (variant) {
-      case _ButtonVariant.primary:
+      case ButtonVariant.primary:
         bg = theme.primary;
         border = theme.primary;
         fg = Colors.white;
         break;
-      case _ButtonVariant.ghost:
+      case ButtonVariant.ghost:
         bg = Colors.transparent;
-        border = theme.primary.withOpacity(.4);
+        border = theme.primary.withValues(alpha: 0.4);
         fg = theme.primary;
         break;
     }
@@ -45,8 +51,6 @@ class AppButton extends StatelessWidget {
   }
 }
 
-enum _ButtonVariant { primary, ghost }
-
 class AppCard extends StatelessWidget {
   const AppCard({super.key, this.child, this.onTap});
   final Widget? child;
@@ -58,9 +62,12 @@ class AppCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.primary.withOpacity(.1)),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.1)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(.04), blurRadius: 8, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4)),
         ],
       ),
       padding: const EdgeInsets.all(16),
@@ -82,13 +89,17 @@ class AppProgressBar extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(children: [
-            Container(height: 10, width: double.infinity, color: Colors.black.withOpacity(.05)),
+            Container(
+                height: 10,
+                width: double.infinity,
+                color: Colors.black.withValues(alpha: 0.05)),
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               height: 10,
               width: constraints.maxWidth * value.clamp(0, 1),
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [colors.primary, colors.success]),
+                gradient:
+                    LinearGradient(colors: [colors.primary, colors.success]),
               ),
             )
           ]);
@@ -98,8 +109,8 @@ class AppProgressBar extends StatelessWidget {
   }
 }
 
-class Badge extends StatelessWidget {
-  const Badge({super.key, required this.label, this.color});
+class AppBadge extends StatelessWidget {
+  const AppBadge({super.key, required this.label, this.color});
   final String label;
   final Color? color;
   @override
@@ -108,10 +119,12 @@ class Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: (color ?? colors.primary).withOpacity(.1),
+        color: (color ?? colors.primary).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(label, style: AppTextStyles.caption.copyWith(color: color ?? colors.primary, fontWeight: FontWeight.w600)),
+      child: Text(label,
+          style: AppTextStyles.caption.copyWith(
+              color: color ?? colors.primary, fontWeight: FontWeight.w600)),
     );
   }
 }

@@ -1,3 +1,7 @@
+library progression;
+
+import 'dart:math' as dart_math;
+
 /// Core progression logic (pure Dart) - draft
 class ProgressionConfig {
   const ProgressionConfig({
@@ -25,7 +29,8 @@ class LessonMetrics {
   final int correct;
   final int total;
   final int baseXp;
-  LessonMetrics({required this.correct, required this.total, required this.baseXp});
+  LessonMetrics(
+      {required this.correct, required this.total, required this.baseXp});
   double get accuracy => total == 0 ? 0 : correct / total;
 }
 
@@ -56,16 +61,17 @@ class ProgressionService {
     // level loop
     while (user.totalXp >= levelRequirement(user.level)) {
       user.level += 1;
-      user.hearts = user.hearts + 1 > config.heartCap ? config.heartCap : user.hearts + 1;
+      user.hearts =
+          user.hearts + 1 > config.heartCap ? config.heartCap : user.hearts + 1;
     }
   }
 
   void updateStreak(UserProgressState user, DateTime nowUtc) {
     final last = user.lastActiveUtc;
-    final threshold = Duration(hours: 30);
+    const threshold = Duration(hours: 30);
     if (last == null) {
       user.streakCurrent = 1;
-    } else if (nowUtc.difference(DateTime.utc(last.year, last.month, last.day)) > threshold) {
+    } else if (nowUtc.difference(last) > threshold) {
       // streak reset
       user.streakCurrent = 1;
     } else if (DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day) !=
@@ -78,11 +84,11 @@ class ProgressionService {
 
 // ignore: avoid_classes_with_only_static_members
 class Math {
-  static double pow(num x, num exponent) => _pow(x.toDouble(), exponent.toDouble());
-  static double _pow(double b, double e) => b == 0 ? 0 : double.parse((dart_math.pow(b, e)).toString());
+  static double pow(num x, num exponent) =>
+      _pow(x.toDouble(), exponent.toDouble());
+  static double _pow(double b, double e) =>
+      b == 0 ? 0 : double.parse((dart_math.pow(b, e)).toString());
 }
-
-import 'dart:math' as dart_math; // placed at end for simplicity
 
 // Derived helpers for UI (recompute level from XP if needed) could be moved to a provider file.
 int deriveLevelFromXp(int xp) {

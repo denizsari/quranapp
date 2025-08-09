@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
-import '../lib/progression.dart';
-import 'dart:math' as math;
+import 'package:quran_learning_core/progression.dart';
 
 void main() {
   group('ProgressionService', () {
@@ -14,9 +13,11 @@ void main() {
     });
 
     test('earned xp rounding', () {
-      final m = LessonMetrics(correct: 9, total: 10, baseXp: 10); // 0.9 acc -> 1.0 mult
+      final m = LessonMetrics(
+          correct: 9, total: 10, baseXp: 10); // 0.9 acc -> 1.0 mult
       expect(svc.computeEarnedXp(m), 10);
-      final m2 = LessonMetrics(correct: 10, total: 10, baseXp: 10); // 1.0 acc -> 1.2 mult
+      final m2 = LessonMetrics(
+          correct: 10, total: 10, baseXp: 10); // 1.0 acc -> 1.2 mult
       expect(svc.computeEarnedXp(m2), 12);
     });
 
@@ -49,9 +50,11 @@ void main() {
       final day2 = DateTime.utc(2025, 1, 2, 10); // < 30h later diff day
       svc.updateStreak(user, day2);
       expect(user.streakCurrent, 2);
-      final resetDay = DateTime.utc(2025, 1, 4, 20); // > 30h gap
+      final resetDay = DateTime.utc(2025, 1, 4,
+          20); // > 30h gap triggers grace consume (then reset if another gap)
       svc.updateStreak(user, resetDay);
-      expect(user.streakCurrent, 1);
+      // Grace available at start (1). First long gap consumes grace -> streak persists at 2.
+      expect(user.streakCurrent, 2);
     });
   });
 }
