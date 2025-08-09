@@ -134,19 +134,53 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 
 ### 3.6.2 adjudicator_submit_ok / adjudicator_submit_fail
 ```
-// success
+// success (backend HTTP 2xx)
 {
   event: 'adjudicator_submit_ok',
   lesson_id: 'm1_alif',
-  attempts: 1,
+  attempts: 1,                 // gerçekte kaç denemede başarılı oldu
+  max_attempts_cfg: 3,          // feature flag / default konfig
+  base_delay_ms_cfg: 150,       // exponential backoff taban gecikmesi
   timestamp: ISO8601
 }
-// fail
+// fail (tüm retry'lar tükendi)
 {
   event: 'adjudicator_submit_fail',
   lesson_id: 'm1_alif',
-  retry_count: 3,
-  last_status_code: 500,
+  retry_count: 3,               // yapılan toplam deneme sayısı
+  last_status_code: 500,        // son HTTP status (yoksa -1)
+  max_attempts_cfg: 3,
+  base_delay_ms_cfg: 150,
+  timestamp: ISO8601
+}
+```
+
+### 3.6.3 ai_scorer_noop / ai_scorer_slow / ai_scorer_error (İç Telemetry)
+```
+// temel başarı (noop scorer sentetik skor üretir)
+{
+  event: 'ai_scorer_noop',
+  lesson_id: 'm1_alif',
+  exercise_id: 'm1_alif_q2',
+  acc: 0.91,
+  latency_ms: 72,
+  timestamp: ISO8601
+}
+// yavaş eşik aşıldığında
+{
+  event: 'ai_scorer_slow',
+  lesson_id: 'm1_alif',
+  exercise_id: 'm1_alif_q2',
+  latency_ms: 275,
+  slow_ms_cfg: 200,
+  timestamp: ISO8601
+}
+// hata / timeout vb.
+{
+  event: 'ai_scorer_error',
+  lesson_id: 'm1_alif',
+  exercise_id: 'm1_alif_q2',
+  error: 'TimeoutException: AI scorer timeout',
   timestamp: ISO8601
 }
 ```
@@ -250,13 +284,13 @@ Bu doküman ürün KPI'larını besleyen temel event'lerin tanımını ve payloa
 - perf_cold_start: { ms_since_process_start, ms_since_binding, firebase_init_ms }
 - perf_lesson_complete_ms: { lesson_id, duration_ms }
 
-## 9. Ek Telemetry (Sprint 4)
+## 9. Ek Telemetry (Sprint 4 & 5)
 - ai_scorer_slow: { lesson_id, exercise_id, latency_ms, slow_ms_cfg }
 - leaderboard_fetched: { count }
-- daily_goal_set: { goal_xp }
+- daily_goal_set: { goal_xp /* future: previous_goal_xp */ }
 - daily_goal_reached: { goal_xp, earned_xp }
- - adjudicator_outbox_submit_error: { lesson_id }
- - ai_scorer_error: { lesson_id, exercise_id, error }
+- adjudicator_outbox_submit_error: { lesson_id }
+- ai_scorer_error: { lesson_id, exercise_id, error }
 
 ---
-Revizyon: v1.2 (Sprint 5 - adjudicator_outbox_submit_error & ai_scorer_error eklendi)
+Revizyon: v1.3 (Sprint 5 ekleri: adjudicator_submit_ok/fail genişletilmiş alanlar, ai_scorer_noop/slo w/error detay şemaları, attempt_batch_flush açıklama netleştirme)
